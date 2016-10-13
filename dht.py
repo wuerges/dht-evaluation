@@ -25,12 +25,11 @@ def subkeys(k):
     for i in range(len(k), -1, -1):
         yield k[:i]
 
-
 class HT:
-    def __init__(self, k):
+    def __init__(self, k, s):
         self.key = k
 
-        self.dict = dict(zip(subkeys(self.key), repeat(True)))
+        self.dict = dict(zip(subkeys(self.key), repeat(s)))
         self.set = {}
 
     def __getitem__(self, k):
@@ -39,15 +38,15 @@ class HT:
     def __setitem__(self, k, value):
         if not k in self.set:
             for sk in subkeys(k):
-                if self.dict.get(sk):
-                    self.dict[sk] = False
+                if sk in self.dict and self.dict[sk] > 0:
+                    self.dict[sk] -= 1
                     self.set[k] = value
                     break
 
 class DHT:
-    def __init__(self, d):
+    def __init__(self, d, s=1):
         self.key = bitdigest(d)
-        self.ht = HT(self.key)
+        self.ht = HT(self.key, s)
 
     def __getitem__(self, k, value):
         return self.ht.__getitem__(bitdigest(k),value)
@@ -55,3 +54,10 @@ class DHT:
     def __setitem__(self, k, value):
         return self.ht.__setitem__(bitdigest(k),value)
 
+
+if __name__ == "__main__":
+    d = DHT("abc".encode(), 1)
+    d["123123".encode()] = "123123"
+    d["123124".encode()] = "123124"
+    d["123125".encode()] = "123125"
+    print(d.ht.set)
