@@ -22,4 +22,16 @@ int main() {
   else {
     cout << "not found" << endl;
   }
+
+  Network network(256);
+  for(int i = 0; i < 1000; ++i) {
+    network.addNode();
+  }
+  for(int i = 0; i < 1000; ++i) {
+    for(int j = 0; j < 1000; ++j) {
+      network.connect(i,j);
+    }
+  }
+
+  return 0;
 }

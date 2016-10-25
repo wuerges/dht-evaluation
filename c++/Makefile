@@ -1,2 +1,2 @@
 all:
-	g++ dht.cc -I/usr/include/cryptopp  -lcrypto
+	g++ -O2 dht.cc -I/usr/include/cryptopp  -lcrypto

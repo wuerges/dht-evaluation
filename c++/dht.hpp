@@ -113,6 +113,7 @@ struct N {
 
   void connect(const N & o) {
     d.setItem(o.key, o.key);
+    //o.d.setItem(this->key, this->key);
   }
 
   pair<vector<int>::iterator, vector<int>::iterator>
@@ -121,5 +122,27 @@ struct N {
   }
 };
 
+struct Network {
+  vector<N> nodes;
+  int max;
+  int seed;
+  Network(int max_): max(max_), seed(0) {
+  }
 
+  void addNode() {
+    nodes.push_back(N(seed++, max));
+  }
+
+  void connect(int a, int b) {
+    nodes[a].connect(nodes[b]);
+    // cout << "connecting " << a << " and " << b << endl;
+  }
+
+  pair<vector<int>::iterator
+    , vector<int>::iterator> neighs(int n) 
+  {
+    return nodes[n].neighs();
+  }
+
+};
 
