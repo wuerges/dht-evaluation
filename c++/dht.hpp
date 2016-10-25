@@ -22,6 +22,12 @@ string sha256(const string str)
   return ss.str();
 }
 
+string sha256int(const int i) {
+  stringstream ss;
+  ss << i;
+  return sha256(ss.str());
+}
+
 void subkeys(const string & str, std::vector<string> & subkeys) {
   subkeys.clear();
   for (int i = str.size(); i >0; --i) {
@@ -79,13 +85,13 @@ struct dht {
 
   typedef typename ht<value_t>::map_t map_t;
 
-  dht(string k_, int max_): 
-    h(sha256(k_)), 
+  dht(int k_, int max_): 
+    h(sha256int(k_)), 
     t(h,max_) 
   {}
 
-  typename map_t::iterator getItem(string k) {
-    return t.getItem(sha256(k));
+  typename map_t::iterator getItem(int k) {
+    return t.getItem(sha256int(k));
   }
 
   typename map_t::iterator end() {
@@ -93,8 +99,27 @@ struct dht {
   }
 
 
-  void setItem(string new_k, value_t new_v) {
-    t.setItem(sha256(new_k), new_v);
+  void setItem(int new_k, value_t new_v) {
+    t.setItem(sha256int(new_k), new_v);
   }
 
 };
+
+struct N {
+  int key;
+  vector<int> ns;
+  dht<int> d;
+  N(int n_, int max) : key(n_), d(n_, max) {}
+
+  void connect(const N & o) {
+    d.setItem(o.key, o.key);
+  }
+
+  pair<vector<int>::iterator, vector<int>::iterator>
+    neighs() {
+    return make_pair(ns.begin(), ns.end());
+  }
+};
+
+
+

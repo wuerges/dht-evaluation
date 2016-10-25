@@ -11,10 +11,10 @@ int main() {
   cout << sha256("1234567890_3") << endl;
   cout << sha256("1234567890_4") << endl;
 
-  dht<int> d("abcde", 256);
-  d.setItem("asdf", 7);
-  d.setItem("asf", 8);
-  auto it = d.getItem("asdf");
+  dht<int> d(1, 256);
+  d.setItem(2, 7);
+  d.setItem(3, 8);
+  auto it = d.getItem(3);
 
   if(it != d.end()) {
     cout << it->second << endl;
