@@ -17,13 +17,10 @@ struct subkey {
   subkey(const string & d, int l_): l(l_) {
     // length in bytes
     int bl = ceil((double) l / 8);
-    cout << "byte length " << bl << endl;
     data.insert(data.begin(), d.begin(), d.begin()+bl);
 
     int r = l % 8;
     unsigned char f = 0xff << (8 - r);
-
-    cout << "data length " << data.size() << endl;
 
     char b = data.back();
 
@@ -32,11 +29,14 @@ struct subkey {
   }
 
   friend ostream& operator<<(ostream & o, subkey sk) {
-    o << "(" << sk.l << ", " << hex;
+
+    stringstream ss;
+
     for ( char d : sk.data ) {
-      o << (int)d;
+      ss << hex << std::setfill ('0') << std::setw(2);
+      ss << (int)d;
     }
-    return o << dec << ")";
+    return o << "(" << sk.l << ", " << ss.str() << ")";
   }
 
 };
