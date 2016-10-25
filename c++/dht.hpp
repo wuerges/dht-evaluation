@@ -63,10 +63,10 @@ string sha256int(const int i) {
   return sha256(ss.str());
 }
 
-void subkeys(const string & str, std::vector<string> & subkeys) {
+void subkeys(const string & str, std::vector<subkeys> & subkeys) {
   subkeys.clear();
-  for (int i = str.size(); i >0; --i) {
-    subkeys.push_back(str.substr(0, i));
+  for (int i = str.size() * 8; i >0; --i) {
+    subkeys.emplace_back(str, i);
   }
 }
 
