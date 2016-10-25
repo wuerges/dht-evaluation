@@ -1,5 +1,6 @@
 #pragma once
 
+#include <cmath>
 #include <string>
 #include <iostream>
 #include <sstream>
@@ -26,6 +27,14 @@ struct subkey {
 
     data.pop_back();
     data.push_back(b & f);
+  }
+
+  friend bool operator<(const subkey &a, const subkey& b) {
+    if (a.l < b.l)
+      return true;
+    if (b.l > a.l)
+      return false;
+    return a.data < b.data;
   }
 
   friend ostream& operator<<(ostream & o, subkey sk) {
@@ -63,7 +72,7 @@ string sha256int(const int i) {
   return sha256(ss.str());
 }
 
-void subkeys(const string & str, std::vector<subkeys> & subkeys) {
+void subkeys(const string & str, std::vector<subkey> & subkeys) {
   subkeys.clear();
   for (int i = str.size() * 8; i >0; --i) {
     subkeys.emplace_back(str, i);
@@ -72,10 +81,15 @@ void subkeys(const string & str, std::vector<subkeys> & subkeys) {
 
 template <typename value_t>
 struct ht {
-  vector<string> sks;
-  map<string, int> p;
+  vector<subkey> sks;
+
+  // This map checks if there is a solt in a subkey
+  map<subkey, int> p;
+  
+  // This map checks if there is the key in the dataset
   typedef map<string, value_t> map_t;
   map_t ks;
+  
   int max;
 
   string k;
@@ -84,8 +98,8 @@ struct ht {
     max(max_) 
   {
     subkeys(k, sks);
-    for(string s : sks) {
-      ks[s] = max;
+    for(auto s : sks) {
+      p[s] = max;
     }
   }
 
@@ -98,11 +112,11 @@ struct ht {
 
   void setItem(string new_k, value_t new_v) {
     if (ks.find(new_k) == ks.end()) {
-      vector<string> sks_i;
+      vector<subkey> sks_i;
       subkeys(new_k, sks_i);
-      for(string sk : sks_i) {
+      for(auto sk : sks_i) {
         auto f = p.find(sk);
-        if(f == p.end() && f->second >0) {
+        if(f != p.end() && f->second >0) {
           p[sk] -= 1;
           ks[new_k] = new_v;
           break;
