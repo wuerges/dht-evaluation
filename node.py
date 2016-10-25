@@ -2,10 +2,11 @@
 import dht
 import networkx as nx
 import scipy
+import sys
 from random import shuffle
 from copy import copy
 
-number_of_nodes = 1000
+number_of_nodes = int(sys.argv[1])
 
 class N:
     def __init__(self, name):
