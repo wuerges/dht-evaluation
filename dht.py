@@ -8,6 +8,14 @@ class hbitarray(bitarray.bitarray):
     def __hash__(self):
         return int("2" + self.to01())
 
+def compare(al, bl):
+    p = 0
+    for (a, b) in zip(al, bl):
+        if a == b:
+            p = 2 * p + 1
+        else:
+            break
+    return p
 
 
 def digest(s):
@@ -43,6 +51,10 @@ class HT:
                     self.set[k] = value
                     break
 
+    def __contains__(self, k):
+        return k in self.set
+
+
 class DHT:
     def __init__(self, d, s=1):
         self.key = bitdigest(d)
@@ -54,6 +66,8 @@ class DHT:
     def __setitem__(self, k, value):
         return self.ht.__setitem__(bitdigest(k),value)
 
+    def __contains__(self, k):
+        return self.ht.__contains__(k)
 
 if __name__ == "__main__":
     d = DHT("abc".encode(), 1)
