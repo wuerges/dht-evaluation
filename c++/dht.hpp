@@ -1,3 +1,5 @@
+#pragma once
+
 #include <string>
 #include <iostream>
 #include <sstream>
@@ -6,6 +8,39 @@
 #include <map>
 #include <openssl/sha.h>
 using namespace std;
+
+struct subkey {
+  // length in bits
+  int l;
+  vector<char> data;
+
+  subkey(const string & d, int l_): l(l_) {
+    // length in bytes
+    int bl = ceil((double) l / 8);
+    cout << "byte length " << bl << endl;
+    data.insert(data.begin(), d.begin(), d.begin()+bl);
+
+    int r = l % 8;
+    unsigned char f = 0xff << (8 - r);
+
+    cout << "data length " << data.size() << endl;
+
+    char b = data.back();
+
+    data.pop_back();
+    data.push_back(b & f);
+  }
+
+  friend ostream& operator<<(ostream & o, subkey sk) {
+    o << "(" << sk.l << ", " << hex;
+    for ( char d : sk.data ) {
+      o << (int)d;
+    }
+    return o << dec << ")";
+  }
+
+};
+
 
 string sha256(const string str)
 {
