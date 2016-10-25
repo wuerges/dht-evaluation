@@ -5,8 +5,12 @@ from itertools import repeat
 
 
 class hbitarray(bitarray.bitarray):
+    def __init__(self):
+        bitarray.bitarray.__init__(self)
+        self.h = int("2" + self.to01())
+
     def __hash__(self):
-        return int("2" + self.to01())
+        return self.h
 
 
 
