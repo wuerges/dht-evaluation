@@ -58,7 +58,6 @@ class HT:
     def __contains__(self, k):
         return k in self.set
 
-
 class DHT:
     def __init__(self, d, s=1):
         self.key = bitdigest(d)
