@@ -116,6 +116,8 @@ def do_the_maths(value_of_y):
 
         count = 0
     for [q1, q2] in permutations(qs, 2):
+        if q1 == q2:
+            continue
         count += 1
         if count > 100:
             break
